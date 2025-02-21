@@ -34,7 +34,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.bullitt.sampleapp.state.ChatViewModel
-import com.bullitt.sampleapp.store.Message
 import kotlinx.coroutines.launch
 
 @Composable
@@ -42,16 +41,8 @@ fun MessageComposeBar(chattingWith: Long, viewModel: ChatViewModel = hiltViewMod
   val coroutineScope = rememberCoroutineScope()
   var messageText by remember { mutableStateOf("") }
 
-  val sendMessage: () -> Unit = {
-    val message =
-      Message(
-        status = Message.Status.SENDING,
-        isOutgoing = true,
-        partnerNumber = chattingWith,
-        content = messageText,
-        timestamp = System.currentTimeMillis(),
-      )
-    coroutineScope.launch { viewModel.sendMessage(message = message) }
+  val sendMessage: (String) -> Unit = {
+    coroutineScope.launch { viewModel.sendMessage(message = it, partnerNumber = chattingWith) }
   }
 
   Surface(
@@ -77,7 +68,7 @@ fun MessageComposeBar(chattingWith: Long, viewModel: ChatViewModel = hiltViewMod
           KeyboardActions(
             onSend = {
               if (messageText.isNotBlank()) {
-                sendMessage()
+                sendMessage(messageText)
                 messageText = ""
               }
             }
@@ -94,7 +85,7 @@ fun MessageComposeBar(chattingWith: Long, viewModel: ChatViewModel = hiltViewMod
       IconButton(
         onClick = {
           if (messageText.isNotBlank()) {
-            sendMessage()
+            sendMessage(messageText)
             messageText = ""
           }
         },

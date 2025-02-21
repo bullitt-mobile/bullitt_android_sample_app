@@ -33,7 +33,7 @@ class MainActivity : ComponentActivity() {
     val bullittConfig =
       BullittConfig(
         // Modify this to change sender's user ID
-        userId = 14045551004,
+        userId = 14045551002,
         buildMode = BullittConfig.BuildMode.PROD,
       )
 

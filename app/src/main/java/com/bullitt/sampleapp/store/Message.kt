@@ -10,6 +10,7 @@ data class Message(
   val isOutgoing: Boolean,
   val partnerNumber: Long?,
   val content: String,
+  val messageId: String,
   val timestamp: Long = System.currentTimeMillis(),
 ) {
   enum class Status(val value: Int) {

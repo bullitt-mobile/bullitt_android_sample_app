@@ -2,9 +2,9 @@ package com.bullitt.sampleapp.store
 
 import android.app.Application
 import androidx.room.Room
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlinx.coroutines.flow.Flow
 
 @Singleton
 class MessageDataSource @Inject constructor(context: Application) {
@@ -21,16 +21,16 @@ class MessageDataSource @Inject constructor(context: Application) {
     messageDao = database.messageDao()
   }
 
-  suspend fun insertMessage(message: Message) {
-    messageDao.insert(message)
-  }
+  suspend fun insertMessage(message: Message) = messageDao.insert(message)
 
-  suspend fun updateMessage(message: Message) {
-    messageDao.update(message)
-  }
+  suspend fun updateMessage(message: Message) = messageDao.update(message)
 
   suspend fun clearMessages() {
     messageDao.clear()
+  }
+
+  fun updateMessageStatus(messageId: String, status: Message.Status) {
+    messageDao.updateMessageStatus(messageId, status)
   }
 
   fun getAllMessages(partnerNumber: Long): Flow<List<Message>> {

@@ -118,7 +118,8 @@ fun MessageItemPreview() {
       partnerNumber = 11234567890,
       content = "Hey there! How's it going?",
       timestamp = System.currentTimeMillis(),
-      status = Message.Status.DELIVERED
+      status = Message.Status.DELIVERED,
+      messageId = ""
     )
 
   val outgoingMessage =
@@ -127,7 +128,8 @@ fun MessageItemPreview() {
       partnerNumber = 11234567890,
       content = "I'm doing good, how are you?",
       timestamp = System.currentTimeMillis(),
-      status = Message.Status.READ
+      status = Message.Status.READ,
+      messageId = ""
     )
 
   Column(modifier = Modifier.fillMaxWidth()) {

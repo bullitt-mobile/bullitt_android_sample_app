@@ -15,21 +15,25 @@ import com.bullitt.sdk.platform.data.events.GlobalEvent
 import com.bullitt.sdk.platform.data.smp.device.response.SatNetwork
 import com.bullitt.sdk.platform.device.DeviceScanResult
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
-class BtViewModel @Inject constructor(private val bullittApis: BullittApis) : ViewModel() {
+class BtViewModel
+@Inject
+constructor(
+  private val bullittApis: BullittApis,
+  private val btDeviceStateHolder: BtDeviceStateHolder,
+) : ViewModel() {
   private val _scanningState = MutableStateFlow<ScanningState>(ScanningState())
   val scanningState: StateFlow<ScanningState> = _scanningState.asStateFlow()
 
-  private val _btDeviceState = MutableStateFlow<BtDeviceState>(BtDeviceState())
-  val btDeviceState: StateFlow<BtDeviceState> = _btDeviceState.asStateFlow()
+  val btDeviceState: StateFlow<BtDeviceState> = btDeviceStateHolder.state
 
   var scanJob: Job? = null
 
@@ -111,7 +115,9 @@ class BtViewModel @Inject constructor(private val bullittApis: BullittApis) : Vi
 
   fun selectDevice(device: DeviceScanResult.Ble) {
     stopScan()
-    _btDeviceState.update { it.copy(connectionState = DeviceConnectionState.Connecting(device)) }
+    btDeviceStateHolder.updateState {
+      it.copy(connectionState = DeviceConnectionState.Connecting(device))
+    }
     viewModelScope.launch {
       when (val deviceConnection = bullittApis.requestDevicePairing(device)) {
         is Response.Failure -> {
@@ -140,7 +146,7 @@ class BtViewModel @Inject constructor(private val bullittApis: BullittApis) : Vi
   }
 
   fun setDeviceDisconnected() {
-    _btDeviceState.update { BtDeviceState() }
+    btDeviceStateHolder.updateState { BtDeviceState() }
   }
 
   fun refreshConnectedDeviceState(deviceStatus: BullittDeviceStatus.Ble) {
@@ -152,7 +158,7 @@ class BtViewModel @Inject constructor(private val bullittApis: BullittApis) : Vi
         "Battery level: ${deviceStatus.batteryLevel}",
     )
 
-    _btDeviceState.update {
+    btDeviceStateHolder.updateState {
       it.copy(
         connectionState =
           DeviceConnectionState.Connected(

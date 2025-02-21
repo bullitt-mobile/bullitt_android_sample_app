@@ -1,33 +1,34 @@
 package com.bullitt.sampleapp.state
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.bullitt.sampleapp.store.Message
+import com.bullitt.sampleapp.messaging.SatMessagingClient
 import com.bullitt.sampleapp.store.MessageDataSource
+import com.bullitt.sdk.platform.data.smp.SmpRequest
+import com.bullitt.sdk.platform.data.smp.content.TextContent
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 @HiltViewModel
-class ChatViewModel @Inject constructor(
-  private val messageDataSource: MessageDataSource
-): ViewModel() {
+class ChatViewModel
+@Inject
+constructor(
+  private val messageDataSource: MessageDataSource,
+  private val satMessagingClient: SatMessagingClient,
+) : ViewModel() {
   fun getMessages(partnerNumber: Long) = messageDataSource.getAllMessages(partnerNumber)
 
-  suspend fun sendMessage(message: Message) {
-    messageDataSource.insertMessage(
-      message.copy(
-        status = Message.Status.SENDING,
+  suspend fun sendMessage(message: String, partnerNumber: Long) {
+    val textContent =
+      TextContent(
+        controlFlag = SmpRequest.Content.ControlFlag.DELIVERY_RECEIPT_REQUIRED,
+        partnerId = partnerNumber,
+        textMessage = message,
       )
-    )
-
-    delay(1000)
-
-    messageDataSource.updateMessage(
-      message.copy(
-        status = Message.Status.SENT,
-      )
-    )
-
-    // TODO: Sending message logic. Mark sent when success, else mark failed
+    if (satMessagingClient.sendMessage(textContent)) {
+      Log.d("ChatViewModel", "Message sent successfully")
+    } else {
+      Log.e("ChatViewModel", "Failed to send message")
+    }
   }
 }

@@ -17,4 +17,7 @@ interface MessageDao {
 
   @Query("SELECT * FROM message where partnerNumber = :partnerNumber ORDER BY timestamp ASC")
   fun getAllMessages(partnerNumber: Long): Flow<List<Message>>
+
+  @Query("UPDATE message SET status = :status WHERE messageId = :messageId")
+  fun updateMessageStatus(messageId: String, status: Message.Status)
 }
