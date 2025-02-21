@@ -15,25 +15,21 @@ import com.bullitt.sdk.platform.data.events.GlobalEvent
 import com.bullitt.sdk.platform.data.smp.device.response.SatNetwork
 import com.bullitt.sdk.platform.device.DeviceScanResult
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
-class BtViewModel
-@Inject
-constructor(
-  private val bullittApis: BullittApis,
-  private val btDeviceStateHolder: BtDeviceStateHolder,
-) : ViewModel() {
+class BtViewModel @Inject constructor(private val bullittApis: BullittApis) : ViewModel() {
   private val _scanningState = MutableStateFlow<ScanningState>(ScanningState())
   val scanningState: StateFlow<ScanningState> = _scanningState.asStateFlow()
 
-  val btDeviceState: StateFlow<BtDeviceState> = btDeviceStateHolder.state
+  private val _btDeviceState = MutableStateFlow<BtDeviceState>(BtDeviceState())
+  val btDeviceState: StateFlow<BtDeviceState> = _btDeviceState.asStateFlow()
 
   var scanJob: Job? = null
 
@@ -115,9 +111,7 @@ constructor(
 
   fun selectDevice(device: DeviceScanResult.Ble) {
     stopScan()
-    btDeviceStateHolder.updateState {
-      it.copy(connectionState = DeviceConnectionState.Connecting(device))
-    }
+    _btDeviceState.update { it.copy(connectionState = DeviceConnectionState.Connecting(device)) }
     viewModelScope.launch {
       when (val deviceConnection = bullittApis.requestDevicePairing(device)) {
         is Response.Failure -> {
@@ -146,7 +140,7 @@ constructor(
   }
 
   fun setDeviceDisconnected() {
-    btDeviceStateHolder.updateState { BtDeviceState() }
+    _btDeviceState.update { BtDeviceState() }
   }
 
   fun refreshConnectedDeviceState(deviceStatus: BullittDeviceStatus.Ble) {
@@ -158,7 +152,7 @@ constructor(
         "Battery level: ${deviceStatus.batteryLevel}",
     )
 
-    btDeviceStateHolder.updateState {
+    _btDeviceState.update {
       it.copy(
         connectionState =
           DeviceConnectionState.Connected(

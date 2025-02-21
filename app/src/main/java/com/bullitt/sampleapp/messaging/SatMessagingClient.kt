@@ -1,7 +1,6 @@
 package com.bullitt.sampleapp.messaging
 
 import android.util.Log
-import com.bullitt.sampleapp.state.BtDeviceStateHolder
 import com.bullitt.sampleapp.store.Message
 import com.bullitt.sampleapp.store.MessageDataSource
 import com.bullitt.sampleapp.store.toMessage
@@ -22,7 +21,6 @@ class SatMessagingClient
 @Inject
 constructor(
   private val bullittApis: BullittApis,
-  private val btDeviceStateHolder: BtDeviceStateHolder,
   private val messageDataSource: MessageDataSource,
 ) {
   private val coroutineScope = CoroutineScope(Dispatchers.Main)
