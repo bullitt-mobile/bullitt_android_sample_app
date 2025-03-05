@@ -12,7 +12,7 @@ activityCompose = "1.10.0"
 composeBom = "2025.02.00"
 navigation = "2.8.7"
 roomKtx = "2.6.1"
-bullittSdk = "0.0.20"
+bullittSdk = "1.0.0"
 hiltNavigationCompose = "1.2.0"
 
 [libraries]

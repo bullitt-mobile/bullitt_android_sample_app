@@ -11,6 +11,7 @@ pluginManagement {
     gradlePluginPortal()
   }
 }
+
 dependencyResolutionManagement {
   repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
   repositories {
@@ -35,11 +36,15 @@ dependencyResolutionManagement {
         }
       }
     } else {
-      logger.warn("local.properties file not found. GitHub Packages repository will not be configured properly.")
+      logger.warn(
+        "local.properties file not found. GitHub Packages repository will not be configured properly."
+      )
     }
+
+    mavenLocal()
   }
 }
 
 rootProject.name = "Bullitt Sample App"
+
 include(":app")
- 
