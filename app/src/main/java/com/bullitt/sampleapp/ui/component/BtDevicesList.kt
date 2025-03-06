@@ -1,7 +1,7 @@
 package com.bullitt.sampleapp.ui.component
 
 import android.annotation.SuppressLint
-import android.bluetooth.BluetoothDevice
+import android.bluetooth.le.ScanResult
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -59,7 +59,7 @@ fun BtDevicesList(
         verticalArrangement = Arrangement.spacedBy(8.dp),
       ) {
         items(devicesList) { device ->
-          DeviceItem(device = device.device.device, onClick = { onDeviceClick(device) })
+          DeviceItem(device = device.device, onClick = { onDeviceClick(device) })
         }
       }
     }
@@ -69,7 +69,7 @@ fun BtDevicesList(
 @SuppressLint("MissingPermission")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun DeviceItem(device: BluetoothDevice, onClick: () -> Unit) {
+private fun DeviceItem(device: ScanResult, onClick: () -> Unit) {
   Card(
     modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -78,12 +78,15 @@ private fun DeviceItem(device: BluetoothDevice, onClick: () -> Unit) {
   ) {
     Column(modifier = Modifier.padding(16.dp)) {
       Text(
-        text = device.name ?: "Unknown Device",
+        text = device.getProperDeviceName(),
         style = MaterialTheme.typography.titleMedium,
         fontWeight = FontWeight.Medium,
       )
       Spacer(modifier = Modifier.height(4.dp))
-      Text(text = "MAC: ${device.address}", style = MaterialTheme.typography.bodyMedium)
+      Text(text = "MAC: ${device.device.address}", style = MaterialTheme.typography.bodyMedium)
     }
   }
 }
+
+@SuppressLint("MissingPermission")
+fun ScanResult.getProperDeviceName() = this.device.name ?: this.scanRecord?.deviceName ?: "Unknown Device"
