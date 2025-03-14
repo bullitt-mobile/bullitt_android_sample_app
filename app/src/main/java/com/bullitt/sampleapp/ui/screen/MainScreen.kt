@@ -117,7 +117,7 @@ fun MainScreen(
     bottomBar = { MessageComposeBar(chattingWith = chattingWith, viewModel = chatViewModel) },
   ) { padding ->
     Column(modifier = Modifier.padding(padding)) {
-      ChatList(chatWith = 14045551001, viewModel = chatViewModel)
+      ChatList(chatWith = chattingWith, viewModel = chatViewModel)
     }
   }
 
@@ -128,15 +128,15 @@ fun MainScreen(
       onConfirm = { newNumber ->
         try {
           val newLongValue = newNumber.toLong()
+          chattingWith = newLongValue
           Toast.makeText(context, "Number updated to $newLongValue", Toast.LENGTH_SHORT).show()
           setShowDialog(false)
         } catch (e: NumberFormatException) {
           Toast.makeText(context, "Invalid number format", Toast.LENGTH_SHORT).show()
         }
-      }
+      },
     )
   }
-
 }
 
 fun checkPermissionsAndNavigateToDevicesList(
@@ -158,11 +158,7 @@ fun checkPermissionsAndNavigateToDevicesList(
 }
 
 @Composable
-fun NumberUpdateDialog(
-  initialNumber: String,
-  onDismiss: () -> Unit,
-  onConfirm: (String) -> Unit
-) {
+fun NumberUpdateDialog(initialNumber: String, onDismiss: () -> Unit, onConfirm: (String) -> Unit) {
   var number by remember { mutableStateOf(initialNumber) }
 
   AlertDialog(
@@ -170,33 +166,19 @@ fun NumberUpdateDialog(
     title = { Text("Update Phone Number") },
     text = {
       Column(
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(16.dp),
-        verticalArrangement = Arrangement.Center
+        modifier = Modifier.fillMaxWidth().padding(16.dp),
+        verticalArrangement = Arrangement.Center,
       ) {
         OutlinedTextField(
           value = number,
           onValueChange = { number = it },
           label = { Text("Phone Number") },
           keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-          modifier = Modifier.fillMaxWidth()
+          modifier = Modifier.fillMaxWidth(),
         )
       }
     },
-    confirmButton = {
-      Button(
-        onClick = { onConfirm(number) }
-      ) {
-        Text("Update")
-      }
-    },
-    dismissButton = {
-      Button(
-        onClick = onDismiss
-      ) {
-        Text("Cancel")
-      }
-    }
+    confirmButton = { Button(onClick = { onConfirm(number) }) { Text("Update") } },
+    dismissButton = { Button(onClick = onDismiss) { Text("Cancel") } },
   )
 }
