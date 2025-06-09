@@ -1,8 +1,15 @@
 package com.bullitt.sampleapp.ui.component
 
 import android.annotation.SuppressLint
-import android.bluetooth.le.ScanResult
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
@@ -23,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.bullitt.sampleapp.state.BtViewModel
 import com.bullitt.sdk.platform.device.DeviceScanResult
+import com.bullitt.sdk.platform.device.ble.BleDevice
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -69,7 +77,7 @@ fun BtDevicesList(
 @SuppressLint("MissingPermission")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun DeviceItem(device: ScanResult, onClick: () -> Unit) {
+private fun DeviceItem(device: BleDevice, onClick: () -> Unit) {
   Card(
     modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -78,7 +86,7 @@ private fun DeviceItem(device: ScanResult, onClick: () -> Unit) {
   ) {
     Column(modifier = Modifier.padding(16.dp)) {
       Text(
-        text = device.getProperDeviceName(),
+        text = device.name,
         style = MaterialTheme.typography.titleMedium,
         fontWeight = FontWeight.Medium,
       )
@@ -87,6 +95,3 @@ private fun DeviceItem(device: ScanResult, onClick: () -> Unit) {
     }
   }
 }
-
-@SuppressLint("MissingPermission")
-fun ScanResult.getProperDeviceName() = this.device.name ?: this.scanRecord?.deviceName ?: "Unknown Device"
