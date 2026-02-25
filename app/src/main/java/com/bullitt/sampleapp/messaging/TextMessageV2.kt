@@ -13,6 +13,7 @@
  */
 package com.bullitt.sampleapp.messaging
 
+import com.bullitt.sdk.platform.annotation.ExperimentalApi
 import com.bullitt.sdk.platform.data.smp.SMPUtils
 import com.bullitt.sdk.platform.data.smp.SmpRequest
 import com.bullitt.sdk.platform.data.smp.content.ExperimentalContent
@@ -21,8 +22,10 @@ import java.nio.ByteBuffer
 
 const val TEXT_MESSAGE_V2_CONTENT_TYPE: Byte = 0x0B
 
+@OptIn(ExperimentalApi::class)
 fun ExperimentalContent.isTextMessageV2() = payload[0] == TEXT_MESSAGE_V2_CONTENT_TYPE
 
+@OptIn(ExperimentalApi::class)
 fun ExperimentalContent.decodeTextMessageV2(): TextContent {
   val buffer = ByteBuffer.wrap(payload)
 

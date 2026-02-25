@@ -2,12 +2,14 @@ package com.bullitt.sampleapp.store
 
 import com.bullitt.sampleapp.messaging.decodeTextMessageV2
 import com.bullitt.sampleapp.messaging.isTextMessageV2
+import com.bullitt.sdk.platform.annotation.ExperimentalApi
 import com.bullitt.sdk.platform.data.smp.ContentBundle
 import com.bullitt.sdk.platform.data.smp.content.ExperimentalContent
 import com.bullitt.sdk.platform.data.smp.content.TextContent
 import com.bullitt.sdk.platform.data.smp.generateMessageId
 
 /** Convert a ContentBundle to a Message, for incoming messages */
+@OptIn(ExperimentalApi::class)
 fun ContentBundle.toMessage(isOutgoing: Boolean): Message {
   val content =
     this.content.let {
