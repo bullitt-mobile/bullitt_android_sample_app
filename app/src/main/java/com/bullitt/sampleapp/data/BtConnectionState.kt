@@ -1,6 +1,6 @@
 package com.bullitt.sampleapp.data
 
-import com.bullitt.sdk.platform.data.device.BullittDeviceStatus
+import com.bullitt.sdk.platform.data.device.status.Ble
 import com.bullitt.sdk.platform.device.DeviceScanResult
 
 sealed interface DeviceConnectionState {
@@ -9,7 +9,7 @@ sealed interface DeviceConnectionState {
   data class Connecting(val device: DeviceScanResult) : DeviceConnectionState
 
   data class Connected(
-    val device: BullittDeviceStatus.Ble,
+    val device: Ble,
     val batteryLevel: Int?,
     val firmwareVersion: String?,
     val serialNumber: String?,

@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.bullitt.sampleapp.messaging.SatMessagingClient
 import com.bullitt.sampleapp.store.MessageDataSource
-import com.bullitt.sdk.platform.data.smp.SmpRequest
+import com.bullitt.sdk.platform.data.smp.content.SmpContent
 import com.bullitt.sdk.platform.data.smp.content.TextContent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -21,7 +21,7 @@ constructor(
   suspend fun sendMessage(message: String, partnerNumber: Long) {
     val textContent =
       TextContent(
-        controlFlag = SmpRequest.Content.ControlFlag.DELIVERY_RECEIPT_REQUIRED,
+        controlFlag = SmpContent.ControlFlag.DELIVERY_RECEIPT_REQUIRED,
         partnerId = partnerNumber,
         textMessage = message,
       )

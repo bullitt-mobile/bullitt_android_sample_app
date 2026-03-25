@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.bullitt.sampleapp.data.BtDeviceState
 import com.bullitt.sampleapp.data.DeviceConnectionState
 import com.bullitt.sdk.platform.data.device.SatConnectionStatus
-import com.bullitt.sdk.platform.data.smp.device.response.SatNetwork
+import com.bullitt.sdk.platform.device.ble.response.SatNetwork
 
 @Composable
 fun BtDeviceInfoBar(btDeviceState: BtDeviceState) {

@@ -1,7 +1,7 @@
 package com.bullitt.sampleapp.data
 
 import com.bullitt.sdk.platform.data.device.SatConnectionStatus
-import com.bullitt.sdk.platform.data.smp.device.response.SatNetwork
+import com.bullitt.sdk.platform.device.ble.response.SatNetwork
 
 data class BtDeviceState(
   val connectionState: DeviceConnectionState = DeviceConnectionState.Disconnected,

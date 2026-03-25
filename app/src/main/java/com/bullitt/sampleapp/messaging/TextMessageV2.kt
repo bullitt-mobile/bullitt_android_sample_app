@@ -14,10 +14,10 @@
 package com.bullitt.sampleapp.messaging
 
 import com.bullitt.sdk.platform.annotation.ExperimentalApi
-import com.bullitt.sdk.platform.data.smp.SMPUtils
-import com.bullitt.sdk.platform.data.smp.SmpRequest
 import com.bullitt.sdk.platform.data.smp.content.ExperimentalContent
+import com.bullitt.sdk.platform.data.smp.content.SmpContent
 import com.bullitt.sdk.platform.data.smp.content.TextContent
+import com.bullitt.sdk.platform.utils.SMPUtils
 import java.nio.ByteBuffer
 
 const val TEXT_MESSAGE_V2_CONTENT_TYPE: Byte = 0x0B
@@ -45,11 +45,7 @@ fun ExperimentalContent.decodeTextMessageV2(): TextContent {
   buffer.get(textPayloadBytes)
   val textPayload = String(textPayloadBytes)
 
-  return TextContent(
-    SmpRequest.Content.ControlFlag.READ_RECEIPT_REQUIRED,
-    userIdentifier,
-    textPayload,
-  )
+  return TextContent(SmpContent.ControlFlag.READ_RECEIPT_REQUIRED, userIdentifier, textPayload)
 }
 
 fun ByteArray.decodeUserId() = SMPUtils.convertByteArrayToHexString(this).toLong(16)

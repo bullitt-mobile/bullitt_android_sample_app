@@ -6,7 +6,8 @@ import com.bullitt.sampleapp.store.MessageDataSource
 import com.bullitt.sampleapp.store.toMessage
 import com.bullitt.sdk.platform.BullittApis
 import com.bullitt.sdk.platform.data.Response
-import com.bullitt.sdk.platform.data.device.BullittDeviceStatus
+import com.bullitt.sdk.platform.data.device.status.Ble
+import com.bullitt.sdk.platform.data.device.status.D2d
 import com.bullitt.sdk.platform.data.events.GlobalEvent
 import com.bullitt.sdk.platform.data.events.MessageEvent
 import com.bullitt.sdk.platform.data.smp.content.SmpContent
@@ -39,7 +40,6 @@ constructor(
           is GlobalEvent.DeviceUpdate -> setLinkedDevice(it.deviceConnection)
           is GlobalEvent.DeviceUnlinked -> setLinkedDevice(null)
           is GlobalEvent.Message -> handleMessageEvent(it.messageEvent)
-          else -> Unit
         }
       }
     }
@@ -52,8 +52,8 @@ constructor(
 
         is Response.Success -> {
           when (response.data.getStatus()) {
-            is BullittDeviceStatus.Ble,
-            is BullittDeviceStatus.D2d -> {
+            is Ble,
+            is D2d -> {
               setLinkedDevice(response.data)
             }
             else -> Log.d(TAG, "Sat device is not linked")
